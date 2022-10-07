@@ -15,7 +15,9 @@ import os
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 STATIC_URL = '/static/'
-
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR,'static')
+]
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
@@ -23,9 +25,9 @@ STATIC_URL = '/static/'
 SECRET_KEY = 'django-insecure-^s!8yu0o@p#tq68bhg2j5+*a3dv8!azsjdzq-8i%q%rm+ma(xr'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
-ALLOWED_HOSTS = ['daeyeon.pythonanywhere.com']
+ALLOWED_HOSTS = []
 
 
 # Application definition
