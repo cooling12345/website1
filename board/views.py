@@ -15,42 +15,20 @@ def dreply(request, bpk, rpk):
     if request.user == r.replyer:
         r.delete()
     else:
-        pass # 20일차 메세지
+        pass
     return redirect("board:detail", bpk)
 
 
 
 def index(request):
-    pg = request.GET.get("page", 2)
-    cate = request.GET.get("cate", "")
-    kw = request.GET.get("kw", "")
+    pg = request.GET.get("page", 1)
+    b = Board.objects.all()
 
-    if kw:
-        if cate == "sub":
-            b = Board.objects.filter(subject__startswith=kw)
-        elif cate == "wri":
-            try:
-                from acc.models import User
-                u = User.objects.get(username=kw)
-                b = Board.objects.filter(writer=u)
-            except:
-                b = Board.objects.none()
-        elif cate == "con":
-            b = Board.objects.filter(content__contains=kw)
-        else:
-            b = Board.objects.none()
-    else:
-        b = Board.objects.all()
-
-    b = b.order_by("-pubdate")
-    
-    pag = Paginator(b, 5)
+    pag = Paginator(b, 3)
     obj = pag.get_page(pg)
 
     context = {
         "bset" : obj,
-        "kw" : kw,
-        "cate" : cate
     }
     return render(request, "board/index.html", context)
 
@@ -58,10 +36,6 @@ def index(request):
 
 def update(request, bpk):
     b = Board.objects.get(id=bpk)
-
-    if b.writer != request.user:
-        # 20 일차 경고!!
-        return redirect("board:index")
 
     if request.method == "POST":
         s = request.POST.get("sub")
@@ -90,7 +64,7 @@ def delete(request, bpk):
     if request.user == b.writer:
         b.delete()
     else:
-        pass # 20 일차! 협박하자!
+        b.delete()
     return redirect("board:index")
 
 def detail(request, bpk):
