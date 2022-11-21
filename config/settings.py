@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 """
 
 import os
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -27,8 +28,7 @@ SECRET_KEY = 'django-insecure-^s!8yu0o@p#tq68bhg2j5+*a3dv8!azsjdzq-8i%q%rm+ma(xr
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['*']
-
+ALLOWED_HOSTS = ['daeyeon.pythonanywhere.com']
 
 # Application definition
 
@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'website',
     'board',
     'acc',
+    'mathfilters',
 ]
 AUTH_USER_MODEL = "acc.User"
 
@@ -55,8 +56,8 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'config.urls'
-MEDIA_URL = "/media/"
-MEDIA_ROOT = BASE_DIR,'media'
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 TEMPLATES = [
     {
