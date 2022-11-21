@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate,login,logout
 from .models import User
 from django.contrib.auth.hashers import check_password
+
 # Create your views here.
 def index(request):
     return render(request, "acc/index.html")
@@ -27,7 +28,9 @@ def signup(request):
         un = request.POST.get("uname")
         up = request.POST.get("upass")
         uc = request.POST.get("ucomm")
-        User.objects.create_user(username=un, password=up, comment=uc)
+        em = request.POST.get("uemail")
+        pi = request.FILES.get("upic")
+        User.objects.create_user(username=un, password=up, comment=uc, email=em, pic=pi)
         return redirect('acc:login')
     return render(request, "acc/signup.html")
 
@@ -69,4 +72,8 @@ def profile(request):
     return render(request, "acc/profile.html")
 
 def userinfo(request):
-    return render(request, "acc/userinfo.html")
+    c = User.objects.all()
+    context = {
+        "cset" : c
+    }
+    return render(request, "acc/userinfo.html", context)
