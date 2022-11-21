@@ -4,4 +4,10 @@ from django.contrib.auth.models import AbstractUser
 
 class User(AbstractUser):
     comment = models.TextField()
-    point = models.IntegerField(default=0)
+    pic = models.ImageField(blank="True", upload_to='pic',default = '', null=True)
+    email = models.EmailField(max_length=128, verbose_name="사용자 이메일")
+
+    def getpic(self):
+        if self.pic:
+            return self.pic.url
+        return "/media/noimage.png"
