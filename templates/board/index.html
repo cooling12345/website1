@@ -1,36 +1,69 @@
 {% extends 'base.html' %}
 {% block con %}
-
 <div class="container">
     <div class="text-center">
-    <h2 style="background-color:greenyellow; font-size: 180%;"><b>🌈게시판🌈</b></h2>
-    </div>      
-    <div class="text-right">
+        <h2 style="background-color:greenyellow; font-size: 180%;"><b>🌈IT게시판🌈</b></h2>
+    </div>
+    {% load mathfilters %}
+
+    {% if user.is_authenticated %}
+    <div class="text-left">
         <a href="{% url 'board:create' %}" class="btn btn-dark">게시글생성</a>
     </div>
+    {% endif %}
 
-    <table class="table table-hover mt-3">
+    <table class="table table-hover mt-4">
         <thead>
             <tr class="table-dark">
                 <th scope="col">NO</th>
-                <th scope="col">과목</th>
-                <th scope="col">내용</th>
+                <th scope="col">SUBJECT</th>
+                <th scope="col">SUMMARY</th>
                 <th scope="col">WRITER</th>
-                <th scope="col">LIKEY</th>
             </tr>
         </thead>
         <tbody>
-            {% for i in bset %}
-                <tr>
-                    <th scope="row">{{forloop.counter}}</th>
-                    <td><a class="sub" href="{% url 'board:detail' i.id %}">{{ i.subject }}</a></td>
-                    <td>{{ i.content }}</td>
-                    <td>{{ i.writer }}</td>
-                    <td>0</td>
-                </tr>
-            {% endfor %}
+            {% if bset %}
+                {% for i in bset %}
+                    <tr>
+                        <th scope="row">{{ bset.start_index|add:forloop.counter0 }}</th>
+                        <td><a class="sub" href="{% url 'board:detail' i.id %}">{{ i.subject }}</a></td>
+                        <td><a href ="{% url 'board:detail' i.id %}">{{ i.content|truncatewords:10 }}</a></td>
+                        <td>{{ i.writer }}</td>
+                    </tr>
+                {% endfor %}
+            {% endif %}
         </tbody>
     </table>
+
+
+
+    <nav aria-label="Page navigation example">
+        <div class="text-center">
+            <ul class="pagination justify-content-center">
+                {% if bset.has_previous %}
+                    <li class="page-item"><a class="page-link" href="{% url 'board:index' %}?page=1&cate={{cate}}&kw={{kw}}">처음</a></li>
+                    <li class="page-item"><a class="page-link" href="{% url 'board:index' %}?page={{ bset.previous_page_number }}&cate={{cate}}&kw={{kw}}">이전</a></li>
+                {% else %}
+                    <li class="page-item disabled"><a class="page-link">처음</a></li>
+                    <li class="page-item disabled"><a class="page-link">이전</a></li>
+                {% endif %}
+
+                {% for i in bset.paginator.page_range %}
+                    {% if i >= bset.number|sub:4 and bset.number|add:5 >= i %}
+                        <li class="page-item {% if bset.number == i %} active {% endif %}"><a class="page-link" href="{% url 'board:index' %}?page={{i}}&cate={{cate}}&kw={{kw}}">{{i}}</a></li>
+                    {% endif %}
+                {% endfor %}
+
+                {% if bset.has_next %}
+                    <li class="page-item"><a class="page-link" href="{% url 'board:index' %}?page={{ bset.next_page_number }}&cate={{cate}}&kw={{kw}}">다음</a></li>
+                    <li class="page-item"><a class="page-link" href="{% url 'board:index' %}?page={{ bset.paginator.num_pages }}&cate={{cate}}&kw={{kw}}">마지막</a></li>
+                {% else %}
+                    <li class="page-item disabled"><a class="page-link">다음</a></li>
+                    <li class="page-item disabled"><a class="page-link">마지막</a></li>
+                {% endif %}
+            </ul>
+        </div>
+    </nav>
 
 
 
@@ -44,6 +77,6 @@
             color:red;
         }
     </style>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3" crossorigin="anonymous"></script>
 </div>
 {% endblock %}
